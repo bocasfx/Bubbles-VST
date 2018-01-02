@@ -12,10 +12,6 @@ QAudioProcessorEditor::QAudioProcessorEditor (QAudioProcessor& p)
     auto now = std::chrono::system_clock::now();
     currentTime = std::chrono::system_clock::to_time_t(now);
     
-    addAndMakeVisible(&triggerMidi);
-    triggerMidi.setButtonText("Trigger Midi");
-    triggerMidi.addListener(this);
-    
     addAndMakeVisible(&midiConsole);
     midiConsole.setReadOnly(true);
     midiConsole.setMultiLine (true);
@@ -28,37 +24,46 @@ QAudioProcessorEditor::QAudioProcessorEditor (QAudioProcessor& p)
     midiConsole.setColour (TextEditor::shadowColourId, Colour (0x16000000));
     
     processor.addActionListener(this);
+    delta = (Point<float>(10.0, 10.0));
+    startTimerHz (60);
 }
 
 QAudioProcessorEditor::~QAudioProcessorEditor()
 {
-    triggerMidi.removeListener(this);
     processor.removeActionListener(this);
 }
 
 void QAudioProcessorEditor::paint (Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
+    Point<float> nextPos = pos + delta;
+    
+    if (nextPos.x < 0 || nextPos.x + 10 > getWidth())
+    {
+        delta.x = -delta.x;
+        nextPos.x = pos.x + delta.x;
+        processor.generateMidiMessage();
+    }
+    
+    if (nextPos.y < 0 || nextPos.y + 10 > getHeight())
+    {
+        delta.y = -delta.y;
+        nextPos.y = pos.y + delta.y;
+        processor.generateMidiMessage();
+    }
+    
+    pos = nextPos;
+    
+    // draw a circle
+    g.setColour (getLookAndFeel().findColour (Slider::thumbColourId));
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-
-    g.setColour (Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText (std::ctime(&currentTime), getLocalBounds(), Justification::bottomRight, 1);
+    g.fillEllipse (pos.x, pos.y, 20, 20);
 }
 
 void QAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    
-    triggerMidi.setBounds(10, 10, 100, 32);
-    midiConsole.setBounds(getWidth() / 2, 0, getWidth() / 2, getHeight());
-}
-
-
-void QAudioProcessorEditor::buttonClicked(Button* button)
-{
-    if (button == &triggerMidi) processor.generateMidiMessage();
+    midiConsole.setBounds(0, 0, getWidth(), getHeight());
 }
 
 void QAudioProcessorEditor::actionListenerCallback(const String& message)
@@ -70,6 +75,11 @@ void QAudioProcessorEditor::writeToMidiConsole (const String& message)
 {
     midiConsole.moveCaretToEnd();
     midiConsole.insertTextAtCaret(message + newLine);
+}
+
+void QAudioProcessorEditor::timerCallback()
+{
+    repaint();
 }
 
 

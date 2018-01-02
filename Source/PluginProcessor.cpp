@@ -150,13 +150,13 @@ void QAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 void QAudioProcessor::generateMidiMessage() {
     Logger::outputDebugString("Generating midi note...");
     
-    MidiMessage message = MidiMessage::noteOn(1, 100, (uint8)100);
+    MidiMessage messageOn = MidiMessage::noteOn(1, 100, (uint8)100);
     double timeStamp = Time::getMillisecondCounterHiRes() * 0.001 - startTime;
-    message.setTimeStamp(timeStamp);
-    midiMessageBuffer.addEvent(message, timeStamp);
+    messageOn.setTimeStamp(timeStamp);
+    midiMessageBuffer.addEvent(messageOn, timeStamp);
     
-    const String strMessage = extractMidiInfo(message);
-    sendActionMessage(strMessage);
+    const String strMessageOn = extractMidiInfo(messageOn);
+    sendActionMessage(strMessageOn);
 }
 
 const String QAudioProcessor::extractMidiInfo (MidiMessage& message)
