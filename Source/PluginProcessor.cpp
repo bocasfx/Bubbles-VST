@@ -1,18 +1,7 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-
-//==============================================================================
 QAudioProcessor::QAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
@@ -32,7 +21,6 @@ QAudioProcessor::~QAudioProcessor()
 {
 }
 
-//==============================================================================
 const String QAudioProcessor::getName() const
 {
     return JucePlugin_Name;
@@ -94,7 +82,6 @@ void QAudioProcessor::changeProgramName (int index, const String& newName)
 {
 }
 
-//==============================================================================
 void QAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
@@ -137,7 +124,6 @@ void QAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiM
     midiMessages.swapWith(midiMessageBuffer);
 }
 
-//==============================================================================
 bool QAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
@@ -148,7 +134,6 @@ AudioProcessorEditor* QAudioProcessor::createEditor()
     return new QAudioProcessorEditor (*this);
 }
 
-//==============================================================================
 void QAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
@@ -161,8 +146,6 @@ void QAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
 }
-
-//==============================================================================
 
 void QAudioProcessor::generateMidiMessage() {
     Logger::outputDebugString("Generating midi note...");
@@ -183,7 +166,6 @@ const String QAudioProcessor::extractMidiInfo (MidiMessage& message)
     return String::toHexString(message.getRawData(), message.getRawDataSize());
 }
 
-//==============================================================================
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {

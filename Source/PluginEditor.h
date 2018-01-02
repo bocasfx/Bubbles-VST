@@ -1,22 +1,9 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin editor.
-
-  ==============================================================================
-*/
 
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 
-
-//==============================================================================
-/**
-*/
 class QAudioProcessorEditor  : public AudioProcessorEditor,
                                public ButtonListener,
                                public ActionListener
@@ -25,7 +12,6 @@ public:
     QAudioProcessorEditor (QAudioProcessor&);
     ~QAudioProcessorEditor();
 
-    //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
     void buttonClicked(Button* button) override;

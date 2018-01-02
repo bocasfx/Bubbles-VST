@@ -20,6 +20,10 @@
       <FILE id="AJ2OcW" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="mGocgz" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="X0APFb" name="PluginDebugger.cpp" compile="1" resource="0"
+            file="Source/PluginDebugger.cpp"/>
+      <FILE id="io0lp6" name="PluginDebugger.h" compile="0" resource="0"
+            file="Source/PluginDebugger.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
