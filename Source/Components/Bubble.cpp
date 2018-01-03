@@ -12,14 +12,16 @@ Bubble::Bubble (QAudioProcessor& p)
     int yDelta = (rand() % 10) + 1;
     delta = Point<int>(xDelta, yDelta);
     
-    int xPosition = rand() % getParentWidth();
-    int yPosition = rand() % getParentHeight();
+    int xPosition = rand() % 800;
+    int yPosition = rand() % 600;
     position = Point<int>(xPosition, yPosition);
+    
+    Logger::outputDebugString("Bubble position: (" + (String)position.x + ", " + (String)position.y + ")");
     
     note = rand() % 127;
     velocity = (uint8)(rand() % 127);
 
-    setTopLeftPosition(position);
+    updatePosition();
 }
 
 Bubble::~Bubble()

@@ -9,11 +9,6 @@ QAudioProcessorEditor::QAudioProcessorEditor (QAudioProcessor& p)
     // editor's size to whatever you need it to be.
     setSize (editorWidth, editorHeight);
     
-    auto now = std::chrono::system_clock::now();
-    currentTime = std::chrono::system_clock::to_time_t(now);
-
-    startTimerHz (60);
-    
     bubbles.add(createBubble());
     bubbles.add(createBubble());
     bubbles.add(createBubble());
@@ -44,13 +39,9 @@ void QAudioProcessorEditor::showBubbles()
     }
 }
 
-void QAudioProcessorEditor::timerCallback()
-{
-    repaint();
-}
-
 Bubble* QAudioProcessorEditor::createBubble()
 {
+    Logger::outputDebugString("Creating bubble: " + (String)bubbles.size());
     return new Bubble(processor);
 }
 
