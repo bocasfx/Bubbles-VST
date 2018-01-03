@@ -14,7 +14,8 @@ QAudioProcessor::QAudioProcessor()
                        ),
     startTime (Time::getMillisecondCounterHiRes() * 0.001),
     sampleRate(44100.0),
-    previousSampleNumber(0)
+    previousSampleNumber(0),
+    noteOffDelay(0.2)
 #endif
 {
     startTimer (1);
@@ -163,32 +164,16 @@ void QAudioProcessor::addMessageToQueue (const MidiMessage& message)
     messageQueue.addEvent (message, message.getTimeStamp());
 }
 
-void QAudioProcessor::generateMidiMessage() {
+void QAudioProcessor::generateMidiMessage(int channel, int note, uint8 velocity) {
     Logger::outputDebugString("Generating midi note...");
     
-    MidiMessage messageOn = MidiMessage::noteOn(1, 100, (uint8)100);
+    MidiMessage messageOn = MidiMessage::noteOn(channel, note, velocity);
     messageOn.setTimeStamp(Time::getMillisecondCounterHiRes() * 0.001 - startTime);
     addMessageToBuffer(messageOn);
     
-    MidiMessage messageOff = MidiMessage::noteOff(1, 100);
-    messageOff.setTimeStamp(messageOn.getTimeStamp() + 0.5);
+    MidiMessage messageOff = MidiMessage::noteOff(channel, note);
+    messageOff.setTimeStamp(messageOn.getTimeStamp() + noteOffDelay);
     addMessageToBuffer(messageOff);
-    
-    // Send a text message to the Editor.
-    const String strMessageOn = extractMidiInfo(messageOn);
-    sendActionMessage(strMessageOn);
-    
-    const String strMessageOff = extractMidiInfo(messageOff);
-    sendActionMessage(strMessageOff);
-}
-
-const String QAudioProcessor::extractMidiInfo (MidiMessage& message)
-{
-    if (message.isNoteOn()) {
-      return "Note on " + MidiMessage::getMidiNoteName(message.getNoteNumber(), true, true, 3);
-    }
-    
-    return String::toHexString(message.getRawData(), message.getRawDataSize());
 }
 
 void QAudioProcessor::timerCallback()

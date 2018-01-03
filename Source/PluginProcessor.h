@@ -4,7 +4,6 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
 class QAudioProcessor  : public AudioProcessor,
-                         public ActionBroadcaster,
                          private Timer
 {
 public:
@@ -40,8 +39,7 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    void generateMidiMessage ();
-    const String extractMidiInfo (MidiMessage& message);
+    void generateMidiMessage (int channel, int note, uint8 velocity);
     void addMessageToBuffer (const MidiMessage& message);
     void addMessageToQueue (const MidiMessage& message);
     void timerCallback() override;
@@ -56,4 +54,5 @@ private:
     MidiBuffer messageQueue;
     double sampleRate;
     int previousSampleNumber;
+    float noteOffDelay;
 };

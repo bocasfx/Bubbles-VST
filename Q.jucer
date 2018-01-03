@@ -13,6 +13,10 @@
               jucerVersion="5.2.0">
   <MAINGROUP id="iiOXzi" name="Q">
     <GROUP id="{1E974463-28CE-67E7-AC2B-3C92335671AD}" name="Source">
+      <GROUP id="{8E035BB2-0752-D80A-083D-A68F16AD0257}" name="Components">
+        <FILE id="KeiRbH" name="Bubble.cpp" compile="1" resource="0" file="Source/Components/Bubble.cpp"/>
+        <FILE id="JsPrUc" name="Bubble.h" compile="0" resource="0" file="Source/Components/Bubble.h"/>
+      </GROUP>
       <FILE id="cYpP2b" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="J9Noeu" name="PluginProcessor.h" compile="0" resource="0"
@@ -20,10 +24,6 @@
       <FILE id="AJ2OcW" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="mGocgz" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
-      <FILE id="X0APFb" name="PluginDebugger.cpp" compile="1" resource="0"
-            file="Source/PluginDebugger.cpp"/>
-      <FILE id="io0lp6" name="PluginDebugger.h" compile="0" resource="0"
-            file="Source/PluginDebugger.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
