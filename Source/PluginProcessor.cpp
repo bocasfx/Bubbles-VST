@@ -12,9 +12,12 @@ QAudioProcessor::QAudioProcessor()
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
                        ),
-    startTime (Time::getMillisecondCounterHiRes() * 0.001)
+    startTime (Time::getMillisecondCounterHiRes() * 0.001),
+    sampleRate(44100.0),
+    previousSampleNumber(0)
 #endif
 {
+    startTimer (1);
 }
 
 QAudioProcessor::~QAudioProcessor()
@@ -120,8 +123,9 @@ bool QAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 
 void QAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+    if (messageQueue.getNumEvents() == 0) return;
     buffer.clear();
-    midiMessages.swapWith(midiMessageBuffer);
+    midiMessages.swapWith(messageQueue);
 }
 
 bool QAudioProcessor::hasEditor() const
@@ -147,23 +151,64 @@ void QAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
     // whose contents will have been created by the getStateInformation() call.
 }
 
+void QAudioProcessor::addMessageToBuffer (const MidiMessage& message)
+{
+    const double timestamp = message.getTimeStamp();
+    const int sampleNumber =  (int) (timestamp * sampleRate);
+    midiMessageBuffer.addEvent (message, sampleNumber);
+}
+
+void QAudioProcessor::addMessageToQueue (const MidiMessage& message)
+{
+    messageQueue.addEvent (message, message.getTimeStamp());
+}
+
 void QAudioProcessor::generateMidiMessage() {
     Logger::outputDebugString("Generating midi note...");
     
     MidiMessage messageOn = MidiMessage::noteOn(1, 100, (uint8)100);
-    double timeStamp = Time::getMillisecondCounterHiRes() * 0.001 - startTime;
-    messageOn.setTimeStamp(timeStamp);
-    midiMessageBuffer.addEvent(messageOn, timeStamp);
+    messageOn.setTimeStamp(Time::getMillisecondCounterHiRes() * 0.001 - startTime);
+    addMessageToBuffer(messageOn);
     
+    MidiMessage messageOff = MidiMessage::noteOff(1, 100);
+    messageOff.setTimeStamp(messageOn.getTimeStamp() + 0.5);
+    addMessageToBuffer(messageOff);
+    
+    // Send a text message to the Editor.
     const String strMessageOn = extractMidiInfo(messageOn);
     sendActionMessage(strMessageOn);
+    
+    const String strMessageOff = extractMidiInfo(messageOff);
+    sendActionMessage(strMessageOff);
 }
 
 const String QAudioProcessor::extractMidiInfo (MidiMessage& message)
 {
-    if (message.isNoteOn())         return "Note on " + MidiMessage::getMidiNoteName(message.getNoteNumber(), true, true, 3);
+    if (message.isNoteOn()) {
+      return "Note on " + MidiMessage::getMidiNoteName(message.getNoteNumber(), true, true, 3);
+    }
     
     return String::toHexString(message.getRawData(), message.getRawDataSize());
+}
+
+void QAudioProcessor::timerCallback()
+{
+    if (midiMessageBuffer.getNumEvents() == 0 ) return;
+    const double currentTime = Time::getMillisecondCounterHiRes() * 0.001 - startTime;
+    const int currentSampleNumber =  (int) (currentTime * sampleRate);
+    MidiBuffer::Iterator iterator (midiMessageBuffer);
+    MidiMessage message;
+    int sampleNumber;
+    while (iterator.getNextEvent (message, sampleNumber))
+    {
+        if (sampleNumber > currentSampleNumber)
+            break;
+        
+        message.setTimeStamp (sampleNumber / sampleRate);
+        addMessageToQueue (message);
+    }
+    midiMessageBuffer.clear (previousSampleNumber, currentSampleNumber - previousSampleNumber);
+    previousSampleNumber = currentSampleNumber;
 }
 
 // This creates new instances of the plugin..
