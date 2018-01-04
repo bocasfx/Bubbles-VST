@@ -51,35 +51,33 @@ Bubble* QAudioProcessorEditor::createBubble()
 
 void QAudioProcessorEditor::detectCollissions()
 {
-    for(int i = 0; i < bubbles.size() - 1; ++i) {
+    for(int i = 0; i < bubbles.size(); ++i) {
+
+        Bubble* bubbleI = bubbles[i];
+        auto posI = bubbleI->getPosition();
+        auto deltaI = bubbleI->getDelta();
+
         for (int j = i + 1; j < bubbles.size(); ++j) {
-            
-            Bubble* bubbleI = bubbles[i];
+
             Bubble* bubbleJ = bubbles[j];
 
-            auto posI = bubbleI->getPosition();
             auto posJ = bubbleJ->getPosition();
-
-            auto deltaI = bubbleI->getDelta();
             auto deltaJ = bubbleJ->getDelta();
-            
+
             float dx = posJ->x - posI->x;
             float dy = posJ->y - posI->y;
             
             float distance = sqrt(pow(dx, 2) + pow(dy, 2));
 
-            const int minDist = 30;
-            const int spring = 1;
-
-            if (distance < minDist)
+            if (distance < BUBBLE_SIZE)
             {
                 float angle = atan2(dy, dx);
 
-                float targetX = posI->x + cos(angle) * minDist;
-                float targetY = posI->y + sin(angle) * minDist;
+                float targetX = posI->x + cos(angle) * BUBBLE_SIZE;
+                float targetY = posI->y + sin(angle) * BUBBLE_SIZE;
 
-                float ax = (targetX - posJ->x) * spring;
-                float ay = (targetY - posJ->y) * spring;
+                float ax = (targetX - posJ->x) * SPRING;
+                float ay = (targetY - posJ->y) * SPRING;
                 
                 float deltaIx = deltaI->x - ax;
                 float deltaIy = deltaI->y - ay;

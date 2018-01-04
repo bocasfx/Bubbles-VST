@@ -38,8 +38,6 @@ Bubble::Bubble (QAudioProcessor& p)
 
     note = rand() % 127;
     velocity = (uint8)(rand() % 127);
-
-    updatePosition();
 }
 
 Bubble::~Bubble()
@@ -49,7 +47,7 @@ Bubble::~Bubble()
 void Bubble::paint (Graphics& g)
 {
     g.setColour(colour);
-    g.drawEllipse (2, 2, 30, 30, 3);
+    g.drawEllipse (BUBBLE_THICKNESS, BUBBLE_THICKNESS, BUBBLE_SIZE, BUBBLE_SIZE, BUBBLE_THICKNESS);
     
     float transparency = 0.5;
     if (active) {
@@ -58,9 +56,9 @@ void Bubble::paint (Graphics& g)
     }
     
     g.beginTransparencyLayer(transparency);
-    g.fillEllipse(2, 2, 30, 30);
-
+    g.fillEllipse(BUBBLE_THICKNESS, BUBBLE_THICKNESS, BUBBLE_SIZE, BUBBLE_SIZE);
     g.endTransparencyLayer();
+
     updatePosition();
 }
 

@@ -3,6 +3,7 @@
 
 const int EDITOR_WIDTH = 800;
 const int EDITOR_HEIGHT = 600;
+const int SPRING = 1;
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
