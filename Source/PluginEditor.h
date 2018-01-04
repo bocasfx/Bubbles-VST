@@ -1,46 +1,32 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin editor.
-
-  ==============================================================================
-*/
 
 #pragma once
 
+const int EDITOR_WIDTH = 800;
+const int EDITOR_HEIGHT = 600;
+
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
+#include "./Components/Bubble.h"
 
-
-//==============================================================================
-/**
-*/
-class QAudioProcessorEditor  : public AudioProcessorEditor,
-                               public ButtonListener,
-                               public ActionListener
+class QAudioProcessorEditor  : public AudioProcessorEditor
 {
 public:
     QAudioProcessorEditor (QAudioProcessor&);
     ~QAudioProcessorEditor();
 
-    //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
-    void buttonClicked(Button* button) override;
-    void actionListenerCallback(const String& message) override;
-    void writeToMidiConsole (const String& message);
+    void showBubbles();
+    Bubble* createBubble();
+    void detectCollissions();
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
+
     QAudioProcessor& processor;
-    
-    time_t currentTime;
-    
-    TextButton triggerMidi;
-    TextEditor midiConsole;
+    Point<int> pos;
+    const int steps;
+    Array<Bubble*> bubbles;
+    Image background;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (QAudioProcessorEditor)
 };

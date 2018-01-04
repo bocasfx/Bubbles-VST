@@ -1,18 +1,7 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-
-//==============================================================================
 QAudioProcessor::QAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
@@ -23,16 +12,19 @@ QAudioProcessor::QAudioProcessor()
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
                        ),
-    startTime (Time::getMillisecondCounterHiRes() * 0.001)
+    startTime (Time::getMillisecondCounterHiRes() * 0.001),
+    sampleRate(44100.0),
+    previousSampleNumber(0),
+    noteOffDelay(0.2)
 #endif
 {
+    startTimer (1);
 }
 
 QAudioProcessor::~QAudioProcessor()
 {
 }
 
-//==============================================================================
 const String QAudioProcessor::getName() const
 {
     return JucePlugin_Name;
@@ -94,7 +86,6 @@ void QAudioProcessor::changeProgramName (int index, const String& newName)
 {
 }
 
-//==============================================================================
 void QAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
@@ -133,11 +124,11 @@ bool QAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 
 void QAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+    if (messageQueue.getNumEvents() == 0) return;
     buffer.clear();
-    midiMessages.swapWith(midiMessageBuffer);
+    midiMessages.swapWith(messageQueue);
 }
 
-//==============================================================================
 bool QAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
@@ -148,7 +139,6 @@ AudioProcessorEditor* QAudioProcessor::createEditor()
     return new QAudioProcessorEditor (*this);
 }
 
-//==============================================================================
 void QAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
@@ -162,28 +152,50 @@ void QAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
     // whose contents will have been created by the getStateInformation() call.
 }
 
-//==============================================================================
+void QAudioProcessor::addMessageToBuffer (const MidiMessage& message)
+{
+    const double timestamp = message.getTimeStamp();
+    const int sampleNumber =  (int) (timestamp * sampleRate);
+    midiMessageBuffer.addEvent (message, sampleNumber);
+}
 
-void QAudioProcessor::generateMidiMessage() {
+void QAudioProcessor::addMessageToQueue (const MidiMessage& message)
+{
+    messageQueue.addEvent (message, message.getTimeStamp());
+}
+
+void QAudioProcessor::generateMidiMessage(int channel, int note, uint8 velocity) {
     Logger::outputDebugString("Generating midi note...");
     
-    MidiMessage message = MidiMessage::noteOn(1, 100, (uint8)100);
-    double timeStamp = Time::getMillisecondCounterHiRes() * 0.001 - startTime;
-    message.setTimeStamp(timeStamp);
-    midiMessageBuffer.addEvent(message, timeStamp);
+    MidiMessage messageOn = MidiMessage::noteOn(channel, note, velocity);
+    messageOn.setTimeStamp(Time::getMillisecondCounterHiRes() * 0.001 - startTime);
+    addMessageToBuffer(messageOn);
     
-    const String strMessage = extractMidiInfo(message);
-    sendActionMessage(strMessage);
+    MidiMessage messageOff = MidiMessage::noteOff(channel, note);
+    messageOff.setTimeStamp(messageOn.getTimeStamp() + noteOffDelay);
+    addMessageToBuffer(messageOff);
 }
 
-const String QAudioProcessor::extractMidiInfo (MidiMessage& message)
+void QAudioProcessor::timerCallback()
 {
-    if (message.isNoteOn())         return "Note on " + MidiMessage::getMidiNoteName(message.getNoteNumber(), true, true, 3);
-    
-    return String::toHexString(message.getRawData(), message.getRawDataSize());
+    if (midiMessageBuffer.getNumEvents() == 0 ) return;
+    const double currentTime = Time::getMillisecondCounterHiRes() * 0.001 - startTime;
+    const int currentSampleNumber =  (int) (currentTime * sampleRate);
+    MidiBuffer::Iterator iterator (midiMessageBuffer);
+    MidiMessage message;
+    int sampleNumber;
+    while (iterator.getNextEvent (message, sampleNumber))
+    {
+        if (sampleNumber > currentSampleNumber)
+            break;
+        
+        message.setTimeStamp (sampleNumber / sampleRate);
+        addMessageToQueue (message);
+    }
+    midiMessageBuffer.clear (previousSampleNumber, currentSampleNumber - previousSampleNumber);
+    previousSampleNumber = currentSampleNumber;
 }
 
-//==============================================================================
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
