@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="E7AOyC" name="Q" displaySplashScreen="1" reportAppUsage="1"
+<JUCERPROJECT id="E7AOyC" name="Bubbles" displaySplashScreen="1" reportAppUsage="1"
               splashScreenColour="Dark" projectType="audioplug" version="0.0.1"
-              bundleIdentifier="com.sixtycycles.Q" includeBinaryInAppConfig="1"
+              bundleIdentifier="com.sixtycycles.Bubbles" includeBinaryInAppConfig="1"
               cppLanguageStandard="11" companyCopyright="" buildVST="1" buildVST3="1"
               buildAU="1" buildAUv3="0" buildRTAS="0" buildAAX="0" buildStandalone="1"
-              enableIAA="0" pluginName="Q" pluginDesc="Q" pluginManufacturer="SixtyCycles"
+              enableIAA="0" pluginName="Bubbles" pluginDesc="Bubbles" pluginManufacturer="SixtyCycles"
               pluginManufacturerCode="Manu" pluginCode="E7ao" pluginChannelConfigs=""
               pluginIsSynth="0" pluginWantsMidiIn="1" pluginProducesMidiOut="1"
-              pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="QAU"
-              pluginRTASCategory="" aaxIdentifier="com.yourcompany.Q" pluginAAXCategory="AAX_ePlugInCategory_Dynamics"
-              jucerVersion="5.2.0">
-  <MAINGROUP id="iiOXzi" name="Q">
+              pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="BubblesAU"
+              pluginRTASCategory="" aaxIdentifier="com.sixtycycles.bubbles"
+              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="5.2.0">
+  <MAINGROUP id="iiOXzi" name="Bubbles">
     <GROUP id="{1E974463-28CE-67E7-AC2B-3C92335671AD}" name="Source">
+      <GROUP id="{FF9D12D5-40F4-D57A-4765-2833F41D15F9}" name="Resources">
+        <FILE id="RvX89q" name="background.png" compile="0" resource="1" file="Source/Resources/background.png"/>
+      </GROUP>
       <GROUP id="{8E035BB2-0752-D80A-083D-A68F16AD0257}" name="Components">
         <FILE id="KeiRbH" name="Bubble.cpp" compile="1" resource="0" file="Source/Components/Bubble.cpp"/>
         <FILE id="JsPrUc" name="Bubble.h" compile="0" resource="0" file="Source/Components/Bubble.h"/>

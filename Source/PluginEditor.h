@@ -1,6 +1,9 @@
 
 #pragma once
 
+const int EDITOR_WIDTH = 800;
+const int EDITOR_HEIGHT = 600;
+
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 #include "./Components/Bubble.h"
@@ -15,18 +18,15 @@ public:
     void resized() override;
     void showBubbles();
     Bubble* createBubble();
+    void detectCollissions();
 
 private:
 
     QAudioProcessor& processor;
     Point<int> pos;
     const int steps;
-    enum {
-        editorWidth = 800,
-        editorHeight = 600
-    };
-    
     Array<Bubble*> bubbles;
+    Image background;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (QAudioProcessorEditor)
 };

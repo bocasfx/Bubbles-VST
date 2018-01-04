@@ -4,20 +4,38 @@
 
 Bubble::Bubble (QAudioProcessor& p)
 : processor(p),
-  channel(1)
+  channel(1),
+  active(false)
 {
-    setSize (20, 20);
+    int componentSize = BUBBLE_SIZE + ( 2 * BUBBLE_THICKNESS);
+    setSize (componentSize, componentSize);
+    
+    colours.add(Colours::crimson);
+    colours.add(Colours::deeppink);
+    colours.add(Colours::orangered);
+    colours.add(Colours::yellow);
+    colours.add(Colours::magenta);
+    colours.add(Colours::darkviolet);
+    colours.add(Colours::limegreen);
+    colours.add(Colours::yellowgreen);
+    colours.add(Colours::mediumturquoise);
+    colours.add(Colours::deepskyblue);
+    colours.add(Colours::sandybrown);
+    colours.add(Colours::mistyrose);
+    colours.add(Colours::lightgrey);
+    
+    int colourIdx = rand() % colours.size();
+    colour = colours[colourIdx];
+    
+    float deltaX = rand() % 7;
+    float deltaY = rand() % 7;
+    
+    delta = Point<float>(deltaX, deltaY);
+    
+    float xPosition = rand() % 800;
+    float yPosition = rand() % 600;
+    position = Point<float>(xPosition, yPosition);
 
-    int xDelta = (rand() % 10) + 1;
-    int yDelta = (rand() % 10) + 1;
-    delta = Point<int>(xDelta, yDelta);
-    
-    int xPosition = rand() % 800;
-    int yPosition = rand() % 600;
-    position = Point<int>(xPosition, yPosition);
-    
-    Logger::outputDebugString("Bubble position: (" + (String)position.x + ", " + (String)position.y + ")");
-    
     note = rand() % 127;
     velocity = (uint8)(rand() % 127);
 
@@ -30,8 +48,19 @@ Bubble::~Bubble()
 
 void Bubble::paint (Graphics& g)
 {
-    g.setColour(Colours::mistyrose);
-    g.fillEllipse (0, 0, 20, 20);
+    g.setColour(colour);
+    g.drawEllipse (2, 2, 30, 30, 3);
+    
+    float transparency = 0.5;
+    if (active) {
+        transparency = 1.0;
+        active = false;
+    }
+    
+    g.beginTransparencyLayer(transparency);
+    g.fillEllipse(2, 2, 30, 30);
+
+    g.endTransparencyLayer();
     updatePosition();
 }
 
@@ -41,22 +70,65 @@ void Bubble::resized()
 
 void Bubble::updatePosition()
 {
-    Point<int> nextPos = position + delta;
+    int parentWidth = getParentWidth();
+    int parentHeight = getParentHeight();
     
-    if (nextPos.x < 0 || nextPos.x + 10 > getParentWidth())
+    delta.y += GRAVITY;
+    Point<float> nextPos = position + delta;
+    
+    if (nextPos.x + RADIUS > parentWidth)
     {
-        delta.x = -delta.x;
-        nextPos.x = position.x + delta.x;
-        processor.generateMidiMessage(channel, note, velocity);
+        nextPos.x = parentWidth - RADIUS;
+        delta.x *= FRICTION;
+        play();
     }
-    
-    if (nextPos.y < 0 || nextPos.y + 10 > getParentHeight())
+    else if (nextPos.x - RADIUS <= 0)
     {
-        delta.y = -delta.y;
-        nextPos.y = position.y + delta.y;
-        processor.generateMidiMessage(channel, note, velocity);
+        nextPos.x = RADIUS + BUBBLE_THICKNESS;
+        delta.x *= FRICTION;
+        play();
+    }
+    else if (nextPos.y + RADIUS > parentHeight)
+    {
+        nextPos.y = parentHeight - RADIUS;
+        delta.y *= FRICTION;
+        play();
+    }
+    else if (nextPos.y - RADIUS <= 0)
+    {
+        nextPos.y = RADIUS + BUBBLE_THICKNESS;
+        delta.y *= FRICTION;
+        play();
     }
     
     position = nextPos;
-    setTopLeftPosition(position);
+    setCentrePosition(nextPos.x, nextPos.y);
+}
+
+void Bubble::collided()
+{
+    Logger::outputDebugString("Collided");
+    play();
+}
+
+Point<float>* Bubble::getPosition()
+{
+    return &position;
+}
+
+Point<float>* Bubble::getDelta()
+{
+    return &delta;
+}
+
+void Bubble::setDelta(float dx, float dy)
+{
+    delta.x = dx;
+    delta.y = dy;
+}
+
+void Bubble::play()
+{
+    processor.generateMidiMessage(channel, note, velocity);
+    active = true;
 }
