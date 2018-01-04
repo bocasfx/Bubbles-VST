@@ -5,7 +5,8 @@
 const int BUBBLE_SIZE = 30;
 const int RADIUS = BUBBLE_SIZE / 2;
 const int BUBBLE_THICKNESS = 3;
-const float GRAVITY = 0.001;
+const int PADDING = 10;
+const float GRAVITY = 0.0;
 const float FRICTION = -1;
 
 class Bubble  : public Component

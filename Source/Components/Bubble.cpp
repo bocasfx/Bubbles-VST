@@ -7,7 +7,7 @@ Bubble::Bubble (QAudioProcessor& p)
   channel(1),
   active(false)
 {
-    int componentSize = BUBBLE_SIZE + ( 2 * BUBBLE_THICKNESS);
+    int componentSize = BUBBLE_SIZE + ( 2 * BUBBLE_THICKNESS) + (2 * PADDING);
     setSize (componentSize, componentSize);
     
     colours.add(Colours::crimson);
@@ -47,16 +47,14 @@ Bubble::~Bubble()
 void Bubble::paint (Graphics& g)
 {
     g.setColour(colour);
-    g.drawEllipse (BUBBLE_THICKNESS, BUBBLE_THICKNESS, BUBBLE_SIZE, BUBBLE_SIZE, BUBBLE_THICKNESS);
+    g.drawEllipse (BUBBLE_THICKNESS + PADDING, BUBBLE_THICKNESS + PADDING, BUBBLE_SIZE, BUBBLE_SIZE, BUBBLE_THICKNESS);
     
-    float transparency = 0.5;
+    g.beginTransparencyLayer(0.5);
     if (active) {
-        transparency = 1.0;
+        g.drawEllipse(BUBBLE_THICKNESS, BUBBLE_THICKNESS, BUBBLE_SIZE + 2 * PADDING, BUBBLE_SIZE + 2 * PADDING, BUBBLE_THICKNESS);
         active = false;
     }
-    
-    g.beginTransparencyLayer(transparency);
-    g.fillEllipse(BUBBLE_THICKNESS, BUBBLE_THICKNESS, BUBBLE_SIZE, BUBBLE_SIZE);
+    g.fillEllipse(BUBBLE_THICKNESS + PADDING, BUBBLE_THICKNESS + PADDING, BUBBLE_SIZE, BUBBLE_SIZE);
     g.endTransparencyLayer();
 
     updatePosition();
@@ -74,7 +72,7 @@ void Bubble::updatePosition()
     delta.y += GRAVITY;
     Point<float> nextPos = position + delta;
     
-    if (nextPos.x + RADIUS > parentWidth)
+    if (nextPos.x + RADIUS >= parentWidth)
     {
         nextPos.x = parentWidth - RADIUS;
         delta.x *= FRICTION;
@@ -82,11 +80,11 @@ void Bubble::updatePosition()
     }
     else if (nextPos.x - RADIUS <= 0)
     {
-        nextPos.x = RADIUS + BUBBLE_THICKNESS;
+        nextPos.x = RADIUS;
         delta.x *= FRICTION;
         play();
     }
-    else if (nextPos.y + RADIUS > parentHeight)
+    else if (nextPos.y + RADIUS >= parentHeight)
     {
         nextPos.y = parentHeight - RADIUS;
         delta.y *= FRICTION;
@@ -94,7 +92,7 @@ void Bubble::updatePosition()
     }
     else if (nextPos.y - RADIUS <= 0)
     {
-        nextPos.y = RADIUS + BUBBLE_THICKNESS;
+        nextPos.y = RADIUS;
         delta.y *= FRICTION;
         play();
     }
