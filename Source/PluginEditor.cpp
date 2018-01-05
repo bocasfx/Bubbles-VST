@@ -11,12 +11,9 @@ QAudioProcessorEditor::QAudioProcessorEditor (QAudioProcessor& p)
     
     background = ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
     
-    bubbles.add(createBubble());
-    bubbles.add(createBubble());
-    bubbles.add(createBubble());
-    bubbles.add(createBubble());
-    bubbles.add(createBubble());
-    bubbles.add(createBubble());
+    for (int i = 0; i < 5; ++i) {
+        bubbles.add(createBubble());
+    }
     
     showBubbles();
 }
@@ -46,7 +43,9 @@ void QAudioProcessorEditor::showBubbles()
 Bubble* QAudioProcessorEditor::createBubble()
 {
     Logger::outputDebugString("Creating bubble: " + (String)bubbles.size());
-    return new Bubble(processor);
+    int note = rand() % 127;
+    uint8 velocity = (uint8)(rand() % 127);
+    return new Bubble(processor, note, velocity);
 }
 
 void QAudioProcessorEditor::detectCollissions()
@@ -54,22 +53,22 @@ void QAudioProcessorEditor::detectCollissions()
     for(int i = 0; i < bubbles.size(); ++i) {
 
         Bubble* bubbleI = bubbles[i];
-        auto posI = bubbleI->getPosition();
-        auto deltaI = bubbleI->getDelta();
+        Point<float>* posI = bubbleI->getPosition();
+        Point<float>* deltaI = bubbleI->getDelta();
 
         for (int j = i + 1; j < bubbles.size(); ++j) {
 
             Bubble* bubbleJ = bubbles[j];
 
-            auto posJ = bubbleJ->getPosition();
-            auto deltaJ = bubbleJ->getDelta();
+            Point<float>* posJ = bubbleJ->getPosition();
+            Point<float>* deltaJ = bubbleJ->getDelta();
 
             float dx = posJ->x - posI->x;
             float dy = posJ->y - posI->y;
             
             float distance = sqrt(pow(dx, 2) + pow(dy, 2));
 
-            if (distance < BUBBLE_SIZE)
+            if (distance <= BUBBLE_SIZE)
             {
                 float angle = atan2(dy, dx);
 

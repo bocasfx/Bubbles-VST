@@ -2,7 +2,7 @@
 #include "../PluginProcessor.h"
 #include "Bubble.h"
 
-Bubble::Bubble (QAudioProcessor& p)
+Bubble::Bubble (QAudioProcessor& p, int n, uint8 v)
 : processor(p),
   channel(1),
   active(false)
@@ -35,9 +35,9 @@ Bubble::Bubble (QAudioProcessor& p)
     float xPosition = rand() % 800;
     float yPosition = rand() % 600;
     position = Point<float>(xPosition, yPosition);
-
-    note = rand() % 127;
-    velocity = (uint8)(rand() % 127);
+    note = n;
+    velocity = v;
+    
 }
 
 Bubble::~Bubble()
@@ -47,15 +47,29 @@ Bubble::~Bubble()
 void Bubble::paint (Graphics& g)
 {
     g.setColour(colour);
-    g.drawEllipse (BUBBLE_THICKNESS + PADDING, BUBBLE_THICKNESS + PADDING, BUBBLE_SIZE, BUBBLE_SIZE, BUBBLE_THICKNESS);
+    g.drawEllipse (BUBBLE_THICKNESS + PADDING,
+                   BUBBLE_THICKNESS + PADDING,
+                   BUBBLE_SIZE, BUBBLE_SIZE,
+                   BUBBLE_THICKNESS);
     
     g.beginTransparencyLayer(0.5);
+    g.fillEllipse(BUBBLE_THICKNESS + PADDING,
+                  BUBBLE_THICKNESS + PADDING,
+                  BUBBLE_SIZE,
+                  BUBBLE_SIZE);
+
+    g.endTransparencyLayer();
+    
     if (active) {
-        g.drawEllipse(BUBBLE_THICKNESS, BUBBLE_THICKNESS, BUBBLE_SIZE + 2 * PADDING, BUBBLE_SIZE + 2 * PADDING, BUBBLE_THICKNESS);
+        g.drawEllipse(BUBBLE_THICKNESS,
+                      BUBBLE_THICKNESS,
+                      BUBBLE_SIZE + 2 * PADDING,
+                      BUBBLE_SIZE + 2 * PADDING,
+                      BUBBLE_THICKNESS);
+        
         active = false;
     }
-    g.fillEllipse(BUBBLE_THICKNESS + PADDING, BUBBLE_THICKNESS + PADDING, BUBBLE_SIZE, BUBBLE_SIZE);
-    g.endTransparencyLayer();
+
 
     updatePosition();
 }

@@ -12,7 +12,7 @@ const float FRICTION = -1;
 class Bubble  : public Component
 {
 public:
-    Bubble (QAudioProcessor& p);
+    Bubble (QAudioProcessor& p, int note, uint8 velocity);
     ~Bubble();
 
     void paint (Graphics& g) override;
