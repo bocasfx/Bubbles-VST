@@ -17,9 +17,9 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-    void showBubbles();
-    Bubble* createBubble();
+    Bubble* createBubble(int x, int y);
     void detectCollissions();
+    void mouseDown(const MouseEvent &event) override;
 
 private:
 

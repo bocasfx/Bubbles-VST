@@ -2,7 +2,7 @@
 #include "../PluginProcessor.h"
 #include "Bubble.h"
 
-Bubble::Bubble (QAudioProcessor& p, int n, uint8 v)
+Bubble::Bubble (QAudioProcessor& p, int n, uint8 v, int x, int y)
 : processor(p),
   channel(1),
   active(false)
@@ -24,20 +24,18 @@ Bubble::Bubble (QAudioProcessor& p, int n, uint8 v)
     colours.add(Colours::mistyrose);
     colours.add(Colours::lightgrey);
     
-    int colourIdx = rand() % colours.size();
+    int colourIdx = (rand() % colours.size());
     colour = colours[colourIdx];
     
-    float deltaX = rand() % 7;
-    float deltaY = rand() % 7;
+    float deltaX = (rand() % 10) -4;
+    float deltaY = (rand() % 10) -4;
     
     delta = Point<float>(deltaX, deltaY);
     
-    float xPosition = rand() % 800;
-    float yPosition = rand() % 600;
-    position = Point<float>(xPosition, yPosition);
+    position = Point<float>(x, y);
     note = n;
     velocity = v;
-    
+    updatePosition();
 }
 
 Bubble::~Bubble()

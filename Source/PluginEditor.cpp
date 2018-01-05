@@ -5,21 +5,16 @@
 QAudioProcessorEditor::QAudioProcessorEditor (QAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p), steps(10)
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
     setSize (EDITOR_WIDTH, EDITOR_HEIGHT);
-    
     background = ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
-    
-    for (int i = 0; i < 5; ++i) {
-        bubbles.add(createBubble());
-    }
-    
-    showBubbles();
+    srand((int)time(NULL));
 }
 
 QAudioProcessorEditor::~QAudioProcessorEditor()
 {
+    for(auto it = bubbles.begin(); it != bubbles.end(); ++it) {
+        delete *it;
+    }
 }
 
 void QAudioProcessorEditor::paint (Graphics& g)
@@ -33,19 +28,19 @@ void QAudioProcessorEditor::resized()
 {
 }
 
-void QAudioProcessorEditor::showBubbles()
+void QAudioProcessorEditor::mouseDown(const MouseEvent &event)
 {
-    for(auto it = bubbles.begin(); it != bubbles.end(); ++it) {
-        addAndMakeVisible(*it);
-    }
+    Bubble* bub = createBubble(event.x, event.y);
+    bubbles.add(bub);
+    addAndMakeVisible(bub);
 }
 
-Bubble* QAudioProcessorEditor::createBubble()
+Bubble* QAudioProcessorEditor::createBubble(int x, int y)
 {
     Logger::outputDebugString("Creating bubble: " + (String)bubbles.size());
     int note = rand() % 127;
     uint8 velocity = (uint8)(rand() % 127);
-    return new Bubble(processor, note, velocity);
+    return new Bubble(processor, note, velocity, x, y);
 }
 
 void QAudioProcessorEditor::detectCollissions()
