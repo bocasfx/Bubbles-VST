@@ -1,13 +1,13 @@
 
 #include "../PluginProcessor.h"
-#include "Bubble.h"
+#include "Particle.h"
 
-Bubble::Bubble (QAudioProcessor& p, int n, uint8 v, int x, int y)
+Particle::Particle (QAudioProcessor& p, int n, uint8 v, int x, int y)
 : processor(p),
   channel(1),
   active(false)
 {
-    int componentSize = BUBBLE_SIZE + ( 2 * BUBBLE_THICKNESS) + (2 * PADDING);
+    int componentSize = PARTICLE_SIZE + ( 2 * PARTICLE_THICKNESS) + (2 * PADDING);
     setSize (componentSize, componentSize);
     
     colours.add(Colours::crimson);
@@ -38,32 +38,32 @@ Bubble::Bubble (QAudioProcessor& p, int n, uint8 v, int x, int y)
     updatePosition();
 }
 
-Bubble::~Bubble()
+Particle::~Particle()
 {
 }
 
-void Bubble::paint (Graphics& g)
+void Particle::paint (Graphics& g)
 {
     g.setColour(colour);
-    g.drawEllipse (BUBBLE_THICKNESS + PADDING,
-                   BUBBLE_THICKNESS + PADDING,
-                   BUBBLE_SIZE, BUBBLE_SIZE,
-                   BUBBLE_THICKNESS);
+    g.drawEllipse (PARTICLE_THICKNESS + PADDING,
+                   PARTICLE_THICKNESS + PADDING,
+                   PARTICLE_SIZE, PARTICLE_SIZE,
+                   PARTICLE_THICKNESS);
     
     g.beginTransparencyLayer(0.5);
-    g.fillEllipse(BUBBLE_THICKNESS + PADDING,
-                  BUBBLE_THICKNESS + PADDING,
-                  BUBBLE_SIZE,
-                  BUBBLE_SIZE);
+    g.fillEllipse(PARTICLE_THICKNESS + PADDING,
+                  PARTICLE_THICKNESS + PADDING,
+                  PARTICLE_SIZE,
+                  PARTICLE_SIZE);
 
     g.endTransparencyLayer();
     
     if (active) {
-        g.drawEllipse(BUBBLE_THICKNESS,
-                      BUBBLE_THICKNESS,
-                      BUBBLE_SIZE + 2 * PADDING,
-                      BUBBLE_SIZE + 2 * PADDING,
-                      BUBBLE_THICKNESS);
+        g.drawEllipse(PARTICLE_THICKNESS,
+                      PARTICLE_THICKNESS,
+                      PARTICLE_SIZE + 2 * PADDING,
+                      PARTICLE_SIZE + 2 * PADDING,
+                      PARTICLE_THICKNESS);
         
         active = false;
     }
@@ -72,11 +72,11 @@ void Bubble::paint (Graphics& g)
     updatePosition();
 }
 
-void Bubble::resized()
+void Particle::resized()
 {
 }
 
-void Bubble::updatePosition()
+void Particle::updatePosition()
 {
     int parentWidth = getParentWidth();
     int parentHeight = getParentHeight();
@@ -113,29 +113,29 @@ void Bubble::updatePosition()
     setCentrePosition(nextPos.x, nextPos.y);
 }
 
-void Bubble::collided()
+void Particle::collided()
 {
     Logger::outputDebugString("Collided");
     play();
 }
 
-Point<float>* Bubble::getPosition()
+Point<float>* Particle::getPosition()
 {
     return &position;
 }
 
-Point<float>* Bubble::getDelta()
+Point<float>* Particle::getDelta()
 {
     return &delta;
 }
 
-void Bubble::setDelta(float dx, float dy)
+void Particle::setDelta(float dx, float dy)
 {
     delta.x = dx;
     delta.y = dy;
 }
 
-void Bubble::play()
+void Particle::play()
 {
     processor.generateMidiMessage(channel, note, velocity);
     active = true;

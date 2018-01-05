@@ -2,18 +2,18 @@
 #pragma once
 #include "../../JuceLibraryCode/JuceHeader.h"
 
-const int BUBBLE_SIZE = 30;
-const int RADIUS = BUBBLE_SIZE / 2;
-const int BUBBLE_THICKNESS = 3;
+const int PARTICLE_SIZE = 30;
+const int RADIUS = PARTICLE_SIZE / 2;
+const int PARTICLE_THICKNESS = 3;
 const int PADDING = 10;
 const float GRAVITY = 0.0;
 const float FRICTION = -1;
 
-class Bubble  : public Component
+class Particle  : public Component
 {
 public:
-    Bubble (QAudioProcessor& p, int note, uint8 velocity, int x, int y);
-    ~Bubble();
+    Particle (QAudioProcessor& p, int note, uint8 velocity, int x, int y);
+    ~Particle();
 
     void paint (Graphics& g) override;
     void resized() override;
@@ -36,6 +36,6 @@ private:
     Colour colour;
     Boolean active;
     
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Bubble)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Particle)
 };
 

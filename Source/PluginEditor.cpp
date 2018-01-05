@@ -12,7 +12,7 @@ QAudioProcessorEditor::QAudioProcessorEditor (QAudioProcessor& p)
 
 QAudioProcessorEditor::~QAudioProcessorEditor()
 {
-    for(auto it = bubbles.begin(); it != bubbles.end(); ++it) {
+    for(auto it = particles.begin(); it != particles.end(); ++it) {
         delete *it;
     }
 }
@@ -30,45 +30,45 @@ void QAudioProcessorEditor::resized()
 
 void QAudioProcessorEditor::mouseDown(const MouseEvent &event)
 {
-    Bubble* bub = createBubble(event.x, event.y);
-    bubbles.add(bub);
+    Particle* bub = createParticle(event.x, event.y);
+    particles.add(bub);
     addAndMakeVisible(bub);
 }
 
-Bubble* QAudioProcessorEditor::createBubble(int x, int y)
+Particle* QAudioProcessorEditor::createParticle(int x, int y)
 {
-    Logger::outputDebugString("Creating bubble: " + (String)bubbles.size());
+    Logger::outputDebugString("Creating Particle: " + (String)particles.size());
     int note = rand() % 127;
     uint8 velocity = (uint8)(rand() % 127);
-    return new Bubble(processor, note, velocity, x, y);
+    return new Particle(processor, note, velocity, x, y);
 }
 
 void QAudioProcessorEditor::detectCollissions()
 {
-    for(int i = 0; i < bubbles.size(); ++i) {
+    for(int i = 0; i < particles.size(); ++i) {
 
-        Bubble* bubbleI = bubbles[i];
-        Point<float>* posI = bubbleI->getPosition();
-        Point<float>* deltaI = bubbleI->getDelta();
+        Particle* particleI = particles[i];
+        Point<float>* posI = particleI->getPosition();
+        Point<float>* deltaI = particleI->getDelta();
 
-        for (int j = i + 1; j < bubbles.size(); ++j) {
+        for (int j = i + 1; j < particles.size(); ++j) {
 
-            Bubble* bubbleJ = bubbles[j];
+            Particle* particleJ = particles[j];
 
-            Point<float>* posJ = bubbleJ->getPosition();
-            Point<float>* deltaJ = bubbleJ->getDelta();
+            Point<float>* posJ = particleJ->getPosition();
+            Point<float>* deltaJ = particleJ->getDelta();
 
             float dx = posJ->x - posI->x;
             float dy = posJ->y - posI->y;
             
             float distance = sqrt(pow(dx, 2) + pow(dy, 2));
 
-            if (distance <= BUBBLE_SIZE)
+            if (distance <= PARTICLE_SIZE)
             {
                 float angle = atan2(dy, dx);
 
-                float targetX = posI->x + cos(angle) * BUBBLE_SIZE;
-                float targetY = posI->y + sin(angle) * BUBBLE_SIZE;
+                float targetX = posI->x + cos(angle) * PARTICLE_SIZE;
+                float targetY = posI->y + sin(angle) * PARTICLE_SIZE;
 
                 float ax = (targetX - posJ->x) * SPRING;
                 float ay = (targetY - posJ->y) * SPRING;
@@ -79,11 +79,11 @@ void QAudioProcessorEditor::detectCollissions()
                 float deltaJx = deltaJ->x + ax;
                 float deltaJy = deltaJ->y + ay;
 
-                bubbleI->setDelta(deltaIx, deltaIy);
-                bubbleJ->setDelta(deltaJx, deltaJy);
+                particleI->setDelta(deltaIx, deltaIy);
+                particleJ->setDelta(deltaJx, deltaJy);
 
-                bubbles[i]->collided();
-                bubbles[j]->collided();
+                particles[i]->collided();
+                particles[j]->collided();
             }
         }
     }

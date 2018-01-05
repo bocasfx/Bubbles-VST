@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="E7AOyC" name="Bubbles" displaySplashScreen="1" reportAppUsage="1"
+<JUCERPROJECT id="E7AOyC" name="Collider" displaySplashScreen="1" reportAppUsage="1"
               splashScreenColour="Dark" projectType="audioplug" version="0.0.1"
-              bundleIdentifier="com.sixtycycles.Bubbles" includeBinaryInAppConfig="1"
+              bundleIdentifier="com.sixtycycles.collider" includeBinaryInAppConfig="1"
               cppLanguageStandard="11" companyCopyright="" buildVST="1" buildVST3="1"
               buildAU="1" buildAUv3="0" buildRTAS="0" buildAAX="0" buildStandalone="1"
-              enableIAA="0" pluginName="Bubbles" pluginDesc="Bubbles" pluginManufacturer="SixtyCycles"
+              enableIAA="0" pluginName="Collider" pluginDesc="Collider" pluginManufacturer="SixtyCycles"
               pluginManufacturerCode="Manu" pluginCode="E7ao" pluginChannelConfigs=""
               pluginIsSynth="0" pluginWantsMidiIn="1" pluginProducesMidiOut="1"
-              pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="BubblesAU"
-              pluginRTASCategory="" aaxIdentifier="com.sixtycycles.bubbles"
+              pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0" pluginAUExportPrefix="ColliderAU"
+              pluginRTASCategory="" aaxIdentifier="com.sixtycycles.collider"
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="5.2.0">
-  <MAINGROUP id="iiOXzi" name="Bubbles">
+  <MAINGROUP id="iiOXzi" name="Collider">
     <GROUP id="{1E974463-28CE-67E7-AC2B-3C92335671AD}" name="Source">
       <GROUP id="{FF9D12D5-40F4-D57A-4765-2833F41D15F9}" name="Resources">
         <FILE id="RvX89q" name="background.png" compile="0" resource="1" file="Source/Resources/background.png"/>
       </GROUP>
       <GROUP id="{8E035BB2-0752-D80A-083D-A68F16AD0257}" name="Components">
-        <FILE id="KeiRbH" name="Bubble.cpp" compile="1" resource="0" file="Source/Components/Bubble.cpp"/>
-        <FILE id="JsPrUc" name="Bubble.h" compile="0" resource="0" file="Source/Components/Bubble.h"/>
+        <FILE id="KeiRbH" name="Particle.cpp" compile="1" resource="0" file="Source/Components/Particle.cpp"/>
+        <FILE id="JsPrUc" name="Particle.h" compile="0" resource="0" file="Source/Components/Particle.h"/>
+        <FILE id="YO3ksI" name="Collider.cpp" compile="1" resource="0" file="Source/Components/Collider.cpp"/>
+        <FILE id="sgW3g0" name="Collider.h" compile="0" resource="0" file="Source/Components/Collider.h"/>
       </GROUP>
       <FILE id="cYpP2b" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

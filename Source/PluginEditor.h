@@ -7,7 +7,7 @@ const int SPRING = 1;
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
-#include "./Components/Bubble.h"
+#include "./Components/Particle.h"
 
 class QAudioProcessorEditor  : public AudioProcessorEditor
 {
@@ -17,7 +17,7 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-    Bubble* createBubble(int x, int y);
+    Particle* createParticle(int x, int y);
     void detectCollissions();
     void mouseDown(const MouseEvent &event) override;
 
@@ -26,7 +26,7 @@ private:
     QAudioProcessor& processor;
     Point<int> pos;
     const int steps;
-    Array<Bubble*> bubbles;
+    Array<Particle*> particles;
     Image background;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (QAudioProcessorEditor)
