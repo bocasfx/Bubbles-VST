@@ -19,6 +19,9 @@
       <GROUP id="{8E035BB2-0752-D80A-083D-A68F16AD0257}" name="Components">
         <FILE id="emEONu" name="Accelerator.cpp" compile="1" resource="0" file="Source/Components/Accelerator.cpp"/>
         <FILE id="v2DYPV" name="Accelerator.h" compile="0" resource="0" file="Source/Components/Accelerator.h"/>
+        <FILE id="jQUpjm" name="ControlPanel.cpp" compile="1" resource="0"
+              file="Source/Components/ControlPanel.cpp"/>
+        <FILE id="g2ewNn" name="ControlPanel.h" compile="0" resource="0" file="Source/Components/ControlPanel.h"/>
         <FILE id="KeiRbH" name="Particle.cpp" compile="1" resource="0" file="Source/Components/Particle.cpp"/>
         <FILE id="JsPrUc" name="Particle.h" compile="0" resource="0" file="Source/Components/Particle.h"/>
       </GROUP>

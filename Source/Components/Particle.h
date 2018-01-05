@@ -2,13 +2,6 @@
 #pragma once
 #include "../../JuceLibraryCode/JuceHeader.h"
 
-const int PARTICLE_SIZE = 30;
-const int RADIUS = PARTICLE_SIZE / 2;
-const int PARTICLE_THICKNESS = 3;
-const int PADDING = 10;
-const float GRAVITY = 0.0;
-const float FRICTION = -1;
-
 class Particle  : public Component
 {
 public:
@@ -35,6 +28,13 @@ private:
     Array<Colour> colours;
     Colour colour;
     Boolean active;
+    
+    const int PARTICLE_SIZE = 30;
+    const int RADIUS = PARTICLE_SIZE / 2;
+    const int PARTICLE_THICKNESS = 3;
+    const int PADDING = 10;
+    const float GRAVITY = 0.0;
+    const float FRICTION = -1;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Particle)
 };
