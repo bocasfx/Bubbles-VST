@@ -17,10 +17,10 @@
         <FILE id="RvX89q" name="background.png" compile="0" resource="1" file="Source/Resources/background.png"/>
       </GROUP>
       <GROUP id="{8E035BB2-0752-D80A-083D-A68F16AD0257}" name="Components">
+        <FILE id="emEONu" name="Accelerator.cpp" compile="1" resource="0" file="Source/Components/Accelerator.cpp"/>
+        <FILE id="v2DYPV" name="Accelerator.h" compile="0" resource="0" file="Source/Components/Accelerator.h"/>
         <FILE id="KeiRbH" name="Particle.cpp" compile="1" resource="0" file="Source/Components/Particle.cpp"/>
         <FILE id="JsPrUc" name="Particle.h" compile="0" resource="0" file="Source/Components/Particle.h"/>
-        <FILE id="YO3ksI" name="Collider.cpp" compile="1" resource="0" file="Source/Components/Collider.cpp"/>
-        <FILE id="sgW3g0" name="Collider.h" compile="0" resource="0" file="Source/Components/Collider.h"/>
       </GROUP>
       <FILE id="cYpP2b" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

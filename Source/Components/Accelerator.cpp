@@ -1,29 +1,30 @@
 /*
   ==============================================================================
 
-    Collider.cpp
-    Created: 5 Jan 2018 10:01:24am
+    Accelerator.cpp
+    Created: 5 Jan 2018 11:03:38am
     Author:  Rodolfo Palacios
 
   ==============================================================================
 */
 
 #include "../../JuceLibraryCode/JuceHeader.h"
-#include "Collider.h"
+#include "Accelerator.h"
 
 //==============================================================================
-Collider::Collider()
+Accelerator::Accelerator()
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
+    setBounds(0, 0, 200, 200);
 
 }
 
-Collider::~Collider()
+Accelerator::~Accelerator()
 {
 }
 
-void Collider::paint (Graphics& g)
+void Accelerator::paint (Graphics& g)
 {
     /* This demo code just fills the component's background and
        draws some placeholder text to get you started.
@@ -39,11 +40,11 @@ void Collider::paint (Graphics& g)
 
     g.setColour (Colours::white);
     g.setFont (14.0f);
-    g.drawText ("Collider", getLocalBounds(),
+    g.drawText ("Accelerator", getLocalBounds(),
                 Justification::centred, true);   // draw some placeholder text
 }
 
-void Collider::resized()
+void Accelerator::resized()
 {
     // This method is where you should set the bounds of any child
     // components that your component contains..

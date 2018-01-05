@@ -8,6 +8,7 @@ const int SPRING = 1;
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 #include "./Components/Particle.h"
+#include "./Components/Accelerator.h"
 
 class QAudioProcessorEditor  : public AudioProcessorEditor
 {
@@ -28,6 +29,7 @@ private:
     const int steps;
     Array<Particle*> particles;
     Image background;
+    Accelerator* accelerator;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (QAudioProcessorEditor)
 };

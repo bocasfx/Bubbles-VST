@@ -8,6 +8,9 @@ QAudioProcessorEditor::QAudioProcessorEditor (QAudioProcessor& p)
     setSize (EDITOR_WIDTH, EDITOR_HEIGHT);
     background = ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
     srand((int)time(NULL));
+    
+    accelerator = new Accelerator();
+    addAndMakeVisible(accelerator);
 }
 
 QAudioProcessorEditor::~QAudioProcessorEditor()

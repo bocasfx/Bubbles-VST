@@ -1,8 +1,8 @@
 /*
   ==============================================================================
 
-    Collider.h
-    Created: 5 Jan 2018 10:01:24am
+    Accelerator.h
+    Created: 5 Jan 2018 11:03:38am
     Author:  Rodolfo Palacios
 
   ==============================================================================
@@ -15,15 +15,15 @@
 //==============================================================================
 /*
 */
-class Collider    : public Component
+class Accelerator    : public Component
 {
 public:
-    Collider();
-    ~Collider();
+    Accelerator();
+    ~Accelerator();
 
     void paint (Graphics&) override;
     void resized() override;
 
 private:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Collider)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Accelerator)
 };
