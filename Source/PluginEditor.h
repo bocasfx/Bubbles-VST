@@ -22,7 +22,7 @@ private:
     ControlPanel* controlPanel;
     
     const int EDITOR_WIDTH = 800;
-    const int EDITOR_HEIGHT = 650;
+    const int EDITOR_HEIGHT = 670;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (QAudioProcessorEditor)
 };

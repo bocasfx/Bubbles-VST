@@ -10,9 +10,9 @@ QAudioProcessorEditor::QAudioProcessorEditor (QAudioProcessor& p)
     
     accelerator = new Accelerator(processor);
     addAndMakeVisible(accelerator);
-    accelerator->setTopLeftPosition(0, 50);
+    accelerator->setTopLeftPosition(0, 70);
     
-    controlPanel = new ControlPanel();
+    controlPanel = new ControlPanel(accelerator);
     addAndMakeVisible(controlPanel);
     controlPanel->setTopLeftPosition(0, 0);
 }

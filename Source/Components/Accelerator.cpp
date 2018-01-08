@@ -3,7 +3,8 @@
 #include "Accelerator.h"
 
 Accelerator::Accelerator(QAudioProcessor& p)
-    : processor (p)
+    : processor (p),
+      spring(1.0)
 {
     background = ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
     setSize(WIDTH, HEIGHT);
@@ -72,8 +73,8 @@ void Accelerator::detectCollissions()
                 float targetX = posI->x + cos(angle) * PARTICLE_SIZE;
                 float targetY = posI->y + sin(angle) * PARTICLE_SIZE;
                 
-                float ax = (targetX - posJ->x) * SPRING;
-                float ay = (targetY - posJ->y) * SPRING;
+                float ax = (targetX - posJ->x) * spring;
+                float ay = (targetY - posJ->y) * spring;
                 
                 float deltaIx = deltaI->x - ax;
                 float deltaIy = deltaI->y - ay;
@@ -88,6 +89,39 @@ void Accelerator::detectCollissions()
                 particles[j]->collided();
             }
         }
+    }
+}
+
+void Accelerator::setGravity(float g)
+{
+    Logger::outputDebugString("Setting gravity: " + (String)g);
+    for(auto it = particles.begin(); it != particles.end(); ++it)
+    {
+        Particle* p = *it;
+        p->setGravity(g);
+    }
+}
+
+void Accelerator::setFriction(float f)
+{
+    for(auto it = particles.begin(); it != particles.end(); ++it)
+    {
+        Particle* p = *it;
+        p->setFriction(f);
+    }
+}
+
+void Accelerator::setSpring(float s)
+{
+    spring = s;
+}
+
+void Accelerator::setDiameter(int d)
+{
+    for(auto it = particles.begin(); it != particles.end(); ++it)
+    {
+        Particle* p = *it;
+        p->setDiameter(d);
     }
 }
 

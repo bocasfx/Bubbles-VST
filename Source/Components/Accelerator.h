@@ -16,6 +16,11 @@ public:
     Particle* createParticle(int, int);
     void detectCollissions();
     void mouseDown(const MouseEvent &) override;
+    
+    void setGravity(float);
+    void setFriction(float);
+    void setSpring(float);
+    void setDiameter(int);
 
 private:
 
@@ -23,7 +28,7 @@ private:
     Array<Particle*> particles;
     Image background;
     
-    const int SPRING = 1;
+    float spring;
     const int WIDTH = 800;
     const int HEIGHT = 600;
     const int PARTICLE_SIZE = 30;
