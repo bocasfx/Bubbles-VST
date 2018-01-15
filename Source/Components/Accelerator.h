@@ -5,7 +5,8 @@
 #include "../../JuceLibraryCode/JuceHeader.h"
 #include "./Particle.h"
 
-class Accelerator    : public Component
+class Accelerator    : public Component,
+                       private Timer
 {
 public:
     Accelerator(QAudioProcessor&);
@@ -13,7 +14,7 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-    Particle* createParticle(int, int);
+    void createParticle(int, int);
     void detectCollissions();
     void mouseDown(const MouseEvent &) override;
     
@@ -21,6 +22,7 @@ public:
     void setFriction(float);
     void setSpring(float);
     void setDiameter(int);
+    void timerCallback() override;
 
 private:
 

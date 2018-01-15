@@ -15,6 +15,7 @@ QAudioProcessorEditor::QAudioProcessorEditor (QAudioProcessor& p)
     controlPanel = new ControlPanel(accelerator);
     addAndMakeVisible(controlPanel);
     controlPanel->setTopLeftPosition(0, 0);
+    processor.addActionListener(this);
 }
 
 QAudioProcessorEditor::~QAudioProcessorEditor()
@@ -27,6 +28,11 @@ void QAudioProcessorEditor::paint (Graphics& g)
 
 void QAudioProcessorEditor::resized()
 {
+}
+
+void QAudioProcessorEditor::actionListenerCallback(const String& message)
+{
+    accelerator->createParticle(100, 100);
 }
 
 

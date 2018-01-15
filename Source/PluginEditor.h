@@ -6,7 +6,8 @@
 #include "./Components/Accelerator.h"
 #include "./Components/ControlPanel.h"
 
-class QAudioProcessorEditor  : public AudioProcessorEditor
+class QAudioProcessorEditor  : public AudioProcessorEditor,
+                               public ActionListener
 {
 public:
     QAudioProcessorEditor (QAudioProcessor&);
@@ -14,6 +15,7 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
+    void actionListenerCallback(const String&) override;
 
 private:
 

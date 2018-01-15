@@ -7,12 +7,11 @@ Particle::Particle (QAudioProcessor& p, int n, uint8 v, int x, int y)
   channel(1),
   active(false),
   diameter(30),
-  gravity(0.0),
-  friction(-1.0)
+  gravity(0.001),
+  friction(-0.75)
 {
     int componentSize = diameter + ( 2 * PARTICLE_THICKNESS) + (2 * PADDING);
     setSize (componentSize, componentSize);
-//    setFramesPerSecond (60);
     
     radius = diameter / 2;
     
@@ -75,7 +74,6 @@ void Particle::paint (Graphics& g)
         active = false;
     }
     g.endTransparencyLayer();
-    updatePosition();
 }
 
 void Particle::resized()
@@ -96,32 +94,34 @@ void Particle::updatePosition()
         delta.x *= friction;
         play();
     }
-    else if (nextPos.x - radius <= 0)
+    
+    if (nextPos.x - radius <= 0)
     {
         nextPos.x = radius;
         delta.x *= friction;
         play();
     }
-    else if (nextPos.y + radius >= parentHeight)
+    
+    if (nextPos.y + radius >= parentHeight)
     {
         nextPos.y = parentHeight - radius;
         delta.y *= friction;
         play();
     }
-    else if (nextPos.y - radius <= 0)
+    
+    if (nextPos.y - radius <= 0)
     {
         nextPos.y = radius;
         delta.y *= friction;
         play();
     }
-    
+
     position = nextPos;
     setCentrePosition(nextPos.x, nextPos.y);
 }
 
 void Particle::collided()
 {
-    Logger::outputDebugString("Collided");
     play();
 }
 

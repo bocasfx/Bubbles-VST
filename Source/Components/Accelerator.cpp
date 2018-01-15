@@ -8,6 +8,7 @@ Accelerator::Accelerator(QAudioProcessor& p)
 {
     background = ImageCache::getFromMemory(BinaryData::background_png, BinaryData::background_pngSize);
     setSize(WIDTH, HEIGHT);
+    startTimer(20);
 }
 
 Accelerator::~Accelerator()
@@ -33,17 +34,16 @@ void Accelerator::resized()
 
 void Accelerator::mouseDown(const MouseEvent &event)
 {
-    Particle* bub = createParticle(event.x, event.y);
-    particles.add(bub);
-    addAndMakeVisible(bub);
+    createParticle(event.x, event.y);
 }
 
-Particle* Accelerator::createParticle(int x, int y)
+void Accelerator::createParticle(int x, int y)
 {
-    Logger::outputDebugString("Creating Particle: " + (String)particles.size());
     int note = rand() % 127;
     uint8 velocity = (uint8)(rand() % 127);
-    return new Particle(processor, note, velocity, x, y);
+    Particle* p = new Particle(processor, note, velocity, x, y);
+    particles.add(p);
+    addAndMakeVisible(p);
 }
 
 void Accelerator::detectCollissions()
@@ -94,7 +94,6 @@ void Accelerator::detectCollissions()
 
 void Accelerator::setGravity(float g)
 {
-    Logger::outputDebugString("Setting gravity: " + (String)g);
     for(auto it = particles.begin(); it != particles.end(); ++it)
     {
         Particle* p = *it;
@@ -125,3 +124,11 @@ void Accelerator::setDiameter(int d)
     }
 }
 
+void Accelerator::timerCallback()
+{
+    for(auto it = particles.begin(); it != particles.end(); ++it)
+    {
+        Particle* p = *it;
+        p->updatePosition();
+    }
+}

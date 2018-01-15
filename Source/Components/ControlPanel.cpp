@@ -17,7 +17,7 @@ ControlPanel::ControlPanel(Accelerator* a) : accelerator(a)
     
     friction.setSliderStyle (Slider::Rotary);
     friction.setRange(-1.0, 0.0, 0.01);
-    friction.setValue(-1.0);
+    friction.setValue(-0.75);
     friction.setTextBoxStyle(Slider::NoTextBox, false, 50, 18);
     friction.setColour(Slider::textBoxOutlineColourId, Colours::transparentBlack);
     friction.setPopupDisplayEnabled(true, true, this);
