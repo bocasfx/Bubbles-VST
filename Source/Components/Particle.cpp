@@ -5,10 +5,15 @@
 Particle::Particle (QAudioProcessor& p, int n, uint8 v, int x, int y)
 : processor(p),
   channel(1),
-  active(false)
+  active(false),
+  diameter(30),
+  gravity(0.001),
+  friction(-0.75)
 {
-    int componentSize = PARTICLE_SIZE + ( 2 * PARTICLE_THICKNESS) + (2 * PADDING);
+    int componentSize = diameter + ( 2 * PARTICLE_THICKNESS) + (2 * PADDING);
     setSize (componentSize, componentSize);
+    
+    radius = diameter / 2;
     
     colours.add(Colours::crimson);
     colours.add(Colours::deeppink);
@@ -44,32 +49,31 @@ Particle::~Particle()
 
 void Particle::paint (Graphics& g)
 {
+    
     g.setColour(colour);
     g.drawEllipse (PARTICLE_THICKNESS + PADDING,
                    PARTICLE_THICKNESS + PADDING,
-                   PARTICLE_SIZE, PARTICLE_SIZE,
+                   diameter, diameter,
                    PARTICLE_THICKNESS);
+    
     
     g.beginTransparencyLayer(0.5);
     g.fillEllipse(PARTICLE_THICKNESS + PADDING,
                   PARTICLE_THICKNESS + PADDING,
-                  PARTICLE_SIZE,
-                  PARTICLE_SIZE);
+                  diameter,
+                  diameter);
 
-    g.endTransparencyLayer();
     
     if (active) {
         g.drawEllipse(PARTICLE_THICKNESS,
                       PARTICLE_THICKNESS,
-                      PARTICLE_SIZE + 2 * PADDING,
-                      PARTICLE_SIZE + 2 * PADDING,
+                      diameter + 2 * PADDING,
+                      diameter + 2 * PADDING,
                       PARTICLE_THICKNESS);
         
         active = false;
     }
-
-
-    updatePosition();
+    g.endTransparencyLayer();
 }
 
 void Particle::resized()
@@ -78,44 +82,46 @@ void Particle::resized()
 
 void Particle::updatePosition()
 {
-    int parentWidth = getParentWidth();
-    int parentHeight = getParentHeight();
+    int parentWidth = 800;
+    int parentHeight = 600;
     
-    delta.y += GRAVITY;
+    delta.y += gravity;
     Point<float> nextPos = position + delta;
     
-    if (nextPos.x + RADIUS >= parentWidth)
+    if (nextPos.x + radius >= parentWidth)
     {
-        nextPos.x = parentWidth - RADIUS;
-        delta.x *= FRICTION;
-        play();
-    }
-    else if (nextPos.x - RADIUS <= 0)
-    {
-        nextPos.x = RADIUS;
-        delta.x *= FRICTION;
-        play();
-    }
-    else if (nextPos.y + RADIUS >= parentHeight)
-    {
-        nextPos.y = parentHeight - RADIUS;
-        delta.y *= FRICTION;
-        play();
-    }
-    else if (nextPos.y - RADIUS <= 0)
-    {
-        nextPos.y = RADIUS;
-        delta.y *= FRICTION;
+        nextPos.x = parentWidth - radius;
+        delta.x *= friction;
         play();
     }
     
+    if (nextPos.x - radius <= 0)
+    {
+        nextPos.x = radius;
+        delta.x *= friction;
+        play();
+    }
+    
+    if (nextPos.y + radius >= parentHeight)
+    {
+        nextPos.y = parentHeight - radius;
+        delta.y *= friction;
+        play();
+    }
+    
+    if (nextPos.y - radius <= 0)
+    {
+        nextPos.y = radius;
+        delta.y *= friction;
+        play();
+    }
+
     position = nextPos;
     setCentrePosition(nextPos.x, nextPos.y);
 }
 
 void Particle::collided()
 {
-    Logger::outputDebugString("Collided");
     play();
 }
 
@@ -139,4 +145,20 @@ void Particle::play()
 {
     processor.generateMidiMessage(channel, note, velocity);
     active = true;
+}
+
+void Particle::setGravity(float g)
+{
+    gravity = g;
+}
+
+void Particle::setFriction(float f)
+{
+    friction = f;
+}
+
+void Particle::setDiameter(int d)
+{
+    diameter = d;
+    radius = diameter / 2;
 }

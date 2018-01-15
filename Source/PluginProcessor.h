@@ -4,7 +4,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
 class QAudioProcessor  : public AudioProcessor,
-                         private Timer
+                         private Timer,
+                         public ActionBroadcaster
 {
 public:
 

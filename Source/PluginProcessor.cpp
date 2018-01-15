@@ -124,9 +124,21 @@ bool QAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 
 void QAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+    if (midiMessages.getNumEvents())
+    {
+        Logger::outputDebugString("incoming!");
+        MidiBuffer::Iterator iterator (midiMessages);
+        MidiMessage message;
+        int sampleNumber;
+        while (iterator.getNextEvent (message, sampleNumber))
+        {
+            sendActionMessage("lskd");
+        }
+    }
     if (messageQueue.getNumEvents() == 0) return;
     buffer.clear();
     midiMessages.swapWith(messageQueue);
+    messageQueue.clear();
 }
 
 bool QAudioProcessor::hasEditor() const
@@ -165,8 +177,6 @@ void QAudioProcessor::addMessageToQueue (const MidiMessage& message)
 }
 
 void QAudioProcessor::generateMidiMessage(int channel, int note, uint8 velocity) {
-    Logger::outputDebugString("Generating midi note...");
-    
     MidiMessage messageOn = MidiMessage::noteOn(channel, note, velocity);
     messageOn.setTimeStamp(Time::getMillisecondCounterHiRes() * 0.001 - startTime);
     addMessageToBuffer(messageOn);

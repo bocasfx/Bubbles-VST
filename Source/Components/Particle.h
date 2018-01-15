@@ -2,13 +2,6 @@
 #pragma once
 #include "../../JuceLibraryCode/JuceHeader.h"
 
-const int PARTICLE_SIZE = 30;
-const int RADIUS = PARTICLE_SIZE / 2;
-const int PARTICLE_THICKNESS = 3;
-const int PADDING = 10;
-const float GRAVITY = 0.0;
-const float FRICTION = -1;
-
 class Particle  : public Component
 {
 public:
@@ -23,8 +16,15 @@ public:
     void updatePosition();
     void collided();
     void play();
+    void setGravity(float);
+    void setFriction(float);
+    void setDiameter(int);
+    void update();
 
 private:
+    
+    const int PARTICLE_THICKNESS = 3;
+    const int PADDING = 10;
     
     QAudioProcessor& processor;
     Point<float> delta;
@@ -35,6 +35,11 @@ private:
     Array<Colour> colours;
     Colour colour;
     Boolean active;
+    
+    int diameter;
+    int radius;
+    float gravity;
+    float friction;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Particle)
 };
